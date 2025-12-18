@@ -40,7 +40,7 @@ const createAbortController = (
 export const makeRequest = async <T, E>(
   url: string,
   options?: Options,
-  timeout = 15000,
+  timeout = 10,
 ): Promise<Result<ApiResponseType<T>, E>> => {
   const { controller, cancelTimeout } = createAbortController(timeout);
 
@@ -54,7 +54,7 @@ export const makeRequest = async <T, E>(
 
   try {
     const res = await fetch(url, fetchOptions);
-    if (!res.ok) return Error<E>(res.status as E);
+    if (!res.ok) return Error<E>(res as E);
 
     const data = (await res.json()) as T;
     return Ok<ApiResponseType<T>>({

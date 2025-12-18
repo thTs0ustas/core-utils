@@ -1,4 +1,4 @@
-import { fromOption } from "./fromOption";
+import { unwrap } from "./unwrap";
 import { None } from "./none";
 import { Some } from "./some";
 import { Option } from "./type";
@@ -21,12 +21,20 @@ const getKey = <T extends object, K extends keyof T>(
 };
 
 // Example usages:
-fromOption(getElement([10, 20, 30], 1), {
+//
+// Simple case with an existing element
+
+const output1 = getElement([10, 20, 30], 1); // Option<number>
+const output2 = getKey({ a: "1", b: "2" }, "a"); // Option<string>
+
+// A way of handling non-existing element
+//
+unwrap(output1, {
   onNone: () => console.log("No element"),
   onSome: console.log,
 });
 
-fromOption(getKey({ a: 1, b: 2 }, "v" as "a"), {
+unwrap(output2, {
   onNone: () => console.log("No value"),
   onSome: console.log,
 });

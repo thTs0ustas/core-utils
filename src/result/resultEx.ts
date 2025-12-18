@@ -28,41 +28,38 @@ const resultExample = async () =>
       if (!parseResult.success) {
         return schemaValidationError(parseResult.error).serializeErrors();
       }
+
       return {
         status: ok.status,
         data: ok.data,
       };
     },
-    fail: (error) => {
-      if (error) {
-        return internalServerError(
-          "500",
-          "Failed to fetch data",
-        ).serializeErrors();
-      }
-      return [undefined, error] as const;
-    },
+    fail: (error) =>
+      internalServerError("500", error.message).serializeErrors(),
   });
 
+//
 // or
 //
-// const resultExample = async () => {
-//   const [ok, error] = await makeRequest<PokeType, Error>(`${BASE_URL}ditto`);
 
-//   if (error) {
-//     return internalServerError("500", "Failed to fetch data").serializeErrors();
-//   }
+const resultExample2 = async () => {
+  const [ok, error] = await makeRequest<PokeType, Error>(`${BASE_URL}ditto`);
 
-//   const parseResult = pokeSchema.safeParse(ok.data);
+  if (error) {
+    return internalServerError("500", "Failed to fetch data").serializeErrors();
+  }
 
-//   if (!parseResult.success) {
-//     return schemaValidationError(parseResult.error).serializeErrors();
-//   }
+  const parseResult = pokeSchema.safeParse(ok.data);
 
-//   return {
-//     status: ok.status,
-//     data: ok.data,
-//   };
-// };
+  if (!parseResult.success) {
+    return schemaValidationError(parseResult.error).serializeErrors();
+  }
+
+  return {
+    status: ok.status,
+    data: ok.data,
+  };
+};
 
 resultExample().then(console.log);
+resultExample2().then(console.log);

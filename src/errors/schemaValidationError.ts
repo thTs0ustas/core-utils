@@ -3,7 +3,7 @@ import { StatusCodes } from "./utils/statusCodes";
 import { baseError } from "./baseError";
 
 export const schemaValidationError = (error: ZodError) => {
-  const name = "Invalid Request";
+  const name = "InvalidRequestError";
   const status = StatusCodes.BAD_REQUEST;
 
   return {
